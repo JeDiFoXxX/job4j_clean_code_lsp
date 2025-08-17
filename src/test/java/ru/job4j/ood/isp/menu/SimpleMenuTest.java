@@ -7,7 +7,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.*;
 
 public class SimpleMenuTest {
-
     public static final ActionDelegate STUB_ACTION = System.out::println;
 
     @Test
@@ -29,5 +28,28 @@ public class SimpleMenuTest {
                 "Покормить собаку", List.of(), STUB_ACTION, "2."))
                 .isEqualTo(menu.select("Покормить собаку").get());
         menu.forEach(i -> System.out.println(i.getNumber() + i.getName()));
+    }
+
+    @Test
+    void whenSelectExistingItemThenReturnMenuItem() {
+        Menu menu = new SimpleMenu();
+        menu.add(Menu.ROOT, "Сходить в магазин", STUB_ACTION);
+        menu.add(Menu.ROOT, "Покормить собаку", STUB_ACTION);
+        menu.add("Сходить в магазин", "Купить продукты", STUB_ACTION);
+        menu.add("Купить продукты", "Купить хлеб", STUB_ACTION);
+        menu.add("Купить продукты", "Купить молоко", STUB_ACTION);
+        String expected = menu.select("Купить хлеб").get().getName();
+        assertThat("Купить хлеб").isEqualTo(expected);
+    }
+
+    @Test
+    void whenSelectNonExistingItemThenReturnEmpty() {
+        Menu menu = new SimpleMenu();
+        menu.add(Menu.ROOT, "Сходить в магазин", STUB_ACTION);
+        menu.add(Menu.ROOT, "Покормить собаку", STUB_ACTION);
+        menu.add("Сходить в магазин", "Купить продукты", STUB_ACTION);
+        menu.add("Купить продукты", "Купить хлеб", STUB_ACTION);
+        menu.add("Купить продукты", "Купить молоко", STUB_ACTION);
+        assertThat(menu.select("Купить батон")).isEmpty();
     }
 }
