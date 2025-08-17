@@ -30,7 +30,6 @@ class PrinterTest {
         printer.print(menu);
         String text = outputStream.toString();
         System.setOut(System.out);
-
         assertThat(expected).isEqualTo(text);
     }
 }
